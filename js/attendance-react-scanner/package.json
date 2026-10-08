@@ -1,0 +1,26 @@
+{
+  "name": "@attendance/attendance-react-scanner",
+  "version": "0.2.0",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./style.css": "./dist/style.css"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json && cp src/style.css dist/style.css"
+  },
+  "dependencies": {
+    "@attendance/attendance-client": "0.2.0"
+  },
+  "peerDependencies": {
+    "react": ">=18 <20"
+  }
+}

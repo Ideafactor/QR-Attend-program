@@ -1,0 +1,11 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+[project]
+name = "attendance-fastapi"
+version = "0.2.0"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = ["attendance-core==0.2.0", "fastapi>=0.115,<1", "qrcode>=8,<9"]
+[tool.setuptools.packages.find]
+where = ["src"]

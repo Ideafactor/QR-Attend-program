@@ -1,0 +1,44 @@
+name: Check
+on: [push, pull_request]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_USER: attendance
+          POSTGRES_PASSWORD: attendance-test-only
+          POSTGRES_DB: attendance_test
+        ports: ['55447:5432']
+        options: >-
+          --health-cmd "pg_isready -U attendance -d attendance_test"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: python -m venv .venv
+      - run: .venv/bin/python -m pip install -r requirements-dev.txt
+      - run: .venv/bin/ruff check python tests examples scripts
+      - run: .venv/bin/pytest -q
+      - run: .venv/bin/pytest -q
+        env:
+          ATTENDANCE_TEST_DATABASE_URL: postgresql+asyncpg://attendance:attendance-test-only@127.0.0.1:55447/attendance_test
+      - run: npm ci
+      - run: .venv/bin/python -m scripts.export_openapi && npm run generate:types
+      - run: git diff --exit-code -- docs/openapi.json js/attendance-client/src/schema.ts
+      - run: npm run build && npm run build:example
+      - run: npm run test:client
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:web
+      - run: .venv/bin/python -m build --no-isolation python/attendance_core && .venv/bin/python -m build --no-isolation python/attendance_fastapi && .venv/bin/python -m build --no-isolation python/attendance_sqlalchemy
+
+      - uses: astral-sh/setup-uv@v6
+      - run: .venv/bin/python -m scripts.build_release
+      - run: .venv/bin/python -m scripts.verify_release

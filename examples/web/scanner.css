@@ -1,0 +1,7 @@
+.scanner-page{max-width:760px;margin:40px auto;padding:28px;background:#fff;border-radius:20px}
+.scanner-page h1{font-size:32px}.scanner-page form{display:grid;gap:16px;margin:24px 0}
+.scanner-page input{width:100%;box-sizing:border-box;font-size:22px}
+.scanner-page .scanner-message{padding:24px;background:#edf5ef;border-radius:12px;font-size:22px;min-height:70px}
+.scanner-page article{padding:16px 0;border-bottom:1px solid #ddd;display:flex;gap:16px;flex-wrap:wrap;justify-content:space-between}
+.scanner-page>p:last-child{color:#65716a;font-size:13px;margin-top:32px}
+@media(max-width:600px){.scanner-page{margin:12px;padding:20px}}

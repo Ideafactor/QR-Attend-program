@@ -1,0 +1,16 @@
+-e python/attendance_core
+-e python/attendance_fastapi
+-e python/attendance_sqlalchemy[sqlite,postgres]
+fastapi==0.141.1
+pydantic==2.13.5
+SQLAlchemy==2.1.1
+alembic==1.20.0
+asyncpg==0.31.0
+aiosqlite==0.22.1
+httpx==0.28.1
+pytest==9.1.1
+pytest-asyncio==1.4.0
+ruff==0.16.9
+uvicorn==0.54.0
+build==1.6.1
+setuptools==84.0.0

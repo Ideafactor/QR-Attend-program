@@ -1,0 +1,17 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+[project]
+name = "attendance-sqlalchemy"
+version = "0.2.0"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = ["attendance-core==0.2.0", "sqlalchemy[asyncio]>=2,<3", "alembic>=1.13,<2"]
+[project.optional-dependencies]
+postgres = ["asyncpg>=0.30,<1"]
+sqlite = ["aiosqlite>=0.20,<1"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+[tool.setuptools.package-data]
+attendance_sqlalchemy = ["migrations/versions/*.py"]

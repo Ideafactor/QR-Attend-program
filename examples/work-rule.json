@@ -1,0 +1,6 @@
+{
+  "name": "테스트 장소 기본", "effective_from": "2026-09-01", "is_default": true,
+  "check_in_start": "08:00", "check_in_slots": ["09:00", "09:30", "10:00", "10:30", "11:00"],
+  "slot_grace_minutes": 10, "checkout_mode": "elapsed", "checkout_offset_minutes": 540,
+  "missing_in_out_start": "18:00", "after_slots": "pending", "dedup_seconds": 60
+}

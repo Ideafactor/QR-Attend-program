@@ -1,0 +1,11 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+[project]
+name = "attendance-core"
+version = "0.2.0"
+readme = "README.md"
+requires-python = ">=3.11"
+description = "Pure attendance rules and repository contracts"
+[tool.setuptools.packages.find]
+where = ["src"]

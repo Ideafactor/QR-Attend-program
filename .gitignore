@@ -1,0 +1,19 @@
+.venv/
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+*.egg-info/
+*.db
+.env
+node_modules/
+dist/
+build/
+
+test-results/
+playwright-report/
+
+# Local secrets and OS files
+.env.*
+!.env.example
+.DS_Store
+*.db-*
