@@ -81,8 +81,7 @@ API의 실제 요청·응답 계약은 `docs/openapi.json`과 실행 서버 `/do
 - `/scanner/session`에 capability 계약과 회전 모드를 포함하고 OpenAPI에서 TypeScript 타입을 생성합니다.
 - `issue_employee_qr`, `get_employee_status`, 선택적 `create_employee_router`를 제공합니다. 로그인→직원 ID 매핑은 호스트 책임입니다. 클라이언트의 `employee.getQr/getStatus`, `hasQrScanResult`로 발급 이후 결과 확인을 지원하며 QR 숨김·갱신·폴링 화면은 호스트가 연결합니다.
 - 관리자 원장 조회에 스캔 ID/시각/출처/판정/처리 상태·사유와 OFFICE/EXTERNAL/MIXED/MANUAL을 추가했습니다. 원장에 수락된 출처만 근무 유형에 반영합니다.
-- MaruLog 계정·팀·세션·CSRF·ADMIN·메뉴·휴가/외부근무 신청·신청번호·배포 설정은 공통 모델에 포함하지 않았습니다. MaruLog 저장소는 읽기만 했습니다.
 
 검증: SQLite 51개, PostgreSQL 17 51개, Chrome 14개, JS 클라이언트/프레임 파서 2개 통과. Ruff, TypeScript 및 예제 빌드, OpenAPI 생성 타입 검사를 수행했습니다. 실제 USB-COM 장비는 연결하지 않았으며 Web Serial은 모의 장치로 검증했습니다.
 
-배포는 `dist/attendance-0.2.0-bundle.tar.gz`입니다. 신규 설치/0.1.x 업그레이드와 MaruLog aqr1→aqr2 전환은 `docs/install.md`를 따릅니다. 운영 배포와 레지스트리 게시를 수행하지 않습니다.
+배포는 `dist/attendance-0.2.0-bundle.tar.gz`입니다. 신규 설치와 0.1.x 업그레이드는 `docs/install.md`를 따릅니다. 운영 배포와 레지스트리 게시를 수행하지 않습니다.

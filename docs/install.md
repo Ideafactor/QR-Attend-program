@@ -130,7 +130,7 @@ export function ScannerPage() {
 .venv/bin/python -m scripts.build_release
 ```
 
-MaruLog 상세 연결은 함께 제공한 MARULOG.md를 참고합니다. 0.2.0부터 스캐너 소스 복사 대신 공개 Python 함수와 React 컴포넌트를 사용할 수 있습니다.
+0.2.0부터 스캐너 소스 복사 대신 공개 Python 함수와 React 컴포넌트를 사용할 수 있습니다.
 
 
 ## 7. 0.1.x → 0.2.0 업그레이드 (필수)
@@ -144,7 +144,7 @@ MaruLog 상세 연결은 함께 제공한 MARULOG.md를 참고합니다. 0.2.0�
 - `AttendanceConfig.qr_signing_secret`에 32바이트 이상의 비밀키를 설정합니다. 스캐너 인증 키와 별개이며 모든 API 인스턴스에 동일하게 배포합니다.
 - `employee_qr_mode` 기본값은 `rotating`입니다. 장기 QR은 기본적으로 거부합니다. 기존 장기 QR이 필요한 이행 환경에서만 `employee_qr_mode="static"`을 명시합니다. static 모드에는 회전/소비 보호가 없습니다.
 - QR은 서버 시각을 기준으로 한 60초 구간 동안 동일하며 다음 구간에서 만료됩니다. 발급 순간부터 무조건 60초 동안 유효한 것은 아닙니다.
-- 형식은 `aqr2.<서명 대상 데이터>.<HMAC>`이며 사업장과 패키지 직원 ID에 결합합니다. MaruLog의 기존 `aqr1`/외부근무 QR과 호환되지 않습니다. 발급·검증을 함께 전환해야 합니다.
+- 형식은 `aqr2.<서명 대상 데이터>.<HMAC>`이며 사업장과 패키지 직원 ID에 결합합니다. 호스트가 자체 QR 형식을 사용했다면 패키지 형식에 맞춰 발급·검증을 함께 전환해야 합니다.
 - 서비스의 `issue_employee_qr(employee_id, tenant_id=...)`로 발급합니다. 직원 생성 응답의 `qr_token`과 재발급 API는 legacy 정적 모드용이며 기본 스캐너에는 사용하지 않습니다.
 - QR 원문은 DB에 저장하지 않습니다. `att_qr_uses.id`가 SHA-256 해시이며 직원·발급·만료·소비 시각·스캔 ID만 저장합니다.
 - QR 소비, 스캔 이력, 원장, override 변경은 같은 트랜잭션입니다. 실패하면 모두 취소되고, 같은 QR의 동시 처리도 한 건만 성공합니다.
@@ -154,7 +154,7 @@ MaruLog 상세 연결은 함께 제공한 MARULOG.md를 참고합니다. 0.2.0�
 
 패키지 migration 체인을 사용하는 호스트는 `att_0001 → att_0002`를 적용합니다. 새 테이블은 `att_qr_uses`, `att_scan_resolutions` 두 개입니다. 기존 테이블과 데이터는 그대로 유지됩니다.
 
-MaruLog처럼 기존 체인에 schema_v1을 직접 편입했다면 **새 host revision**에서 다음 부분만 실행합니다. 기존 revision을 schema_v2로 고치거나 기존 테이블을 다시 만들지 않습니다.
+호스트의 기존 체인에 schema_v1을 직접 편입했다면 **새 host revision**에서 다음 부분만 실행합니다. 기존 revision을 schema_v2로 고치거나 기존 테이블을 다시 만들지 않습니다.
 
 ```python
 from alembic import op
@@ -203,7 +203,3 @@ if (hasQrScanResult(status)) {
 ```
 
 `issued_at`은 분 단위 구간 시작 시각이고 `generated_at`은 실제 요청 처리 시각입니다. 이전 스캔이 방금 발급한 QR의 결과로 보이지 않도록 상태 조회에는 **generated_at**을 사용합니다. 폴링 종료·QR 표시·화면 경로·세션은 호스트가 구현합니다.
-
-### MaruLog 기존 어댑터 교체
-
-공통 QR 발급/검증·비조기퇴근 보완·소비 원장·시리얼 화면을 패키지 호출로 바꿉니다. 기존 MaruLog QR 소비 트랜잭션과 플러그인 소비를 중복 실행하지 않습니다. 기존 MaruLog 소비 이력은 보존하고 새로운 형식부터 패키지 원장에 기록합니다. 계정 동기화·세션/CSRF/ADMIN·연차·외부근무 신청/승인·신청 번호·콘솔 배치·Tailscale/8008 설정은 이 패키지로 옮기지 않습니다.

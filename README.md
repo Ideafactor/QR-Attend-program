@@ -9,7 +9,6 @@ FastAPI 기반 QR 출퇴근 관리 패키지입니다. 기존 서비스에 Pytho
 - [스캐너 페이지](#스캐너-페이지): 화면 미리보기, 접속 주소와 USB 연결 방법
 
 - [범용 설치 매뉴얼](docs/install.md): 기존 서비스 설치, 스캐너 연결, 0.1.x 업그레이드
-- [MaruLog 연동 매뉴얼](docs/marulog-installation.md): MaruLog 설치·연동
 - [구현 현황](docs/implementation.md): 구현 범위와 제약, PRD와의 차이
 - [요구사항](docs/prd.md) · [OpenAPI 명세](docs/openapi.json)
 
@@ -112,7 +111,7 @@ npm run dev
 
 ### 실제 서비스에 연결
 
-공통 화면은 [`AttendanceScanner`](js/attendance-react-scanner/src/index.tsx)로 제공하고, [`examples/web/scanner.tsx`](examples/web/scanner.tsx)는 이를 사용하는 예제입니다. MaruLog 등 실제 서비스에서는 이 컴포넌트를 서비스의 페이지 경로에 등록하고 스캐너 API에 연결합니다. 연동 후에는 해당 서비스의 스캐너 페이지를 사용하므로 이 저장소의 예제 웹 서버를 별도로 실행할 필요가 없습니다.
+공통 화면은 [`AttendanceScanner`](js/attendance-react-scanner/src/index.tsx)로 제공하고, [`examples/web/scanner.tsx`](examples/web/scanner.tsx)는 이를 사용하는 예제입니다. 실제 서비스에서는 이 컴포넌트를 서비스의 페이지 경로에 등록하고 스캐너 API에 연결합니다. 연동 후에는 해당 서비스의 스캐너 페이지를 사용하므로 이 저장소의 예제 웹 서버를 별도로 실행할 필요가 없습니다.
 
 ```tsx
 import { AttendanceScanner } from '@attendance/attendance-react-scanner';
