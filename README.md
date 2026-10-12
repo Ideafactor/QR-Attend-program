@@ -6,6 +6,8 @@ FastAPI 기반 QR 출퇴근 관리 패키지입니다. 기존 서비스에 Pytho
 
 ## 문서 안내
 
+- [스캐너 페이지](#스캐너-페이지): 화면 미리보기, 접속 주소와 USB 연결 방법
+
 - [범용 설치 매뉴얼](docs/install.md): 기존 서비스 설치, 스캐너 연결, 0.1.x 업그레이드
 - [MaruLog 연동 매뉴얼](docs/marulog-installation.md): MaruLog 설치·연동
 - [구현 현황](docs/implementation.md): 구현 범위와 제약, PRD와의 차이
@@ -89,9 +91,39 @@ npm run dev
 
 직원 인증 키와 직원 ID의 고정 매핑은 예제용입니다. 실제 서비스에서는 로그인한 직원의 세션으로 본인을 확인합니다.
 
-## USB-COM / USB-KBW 스캐너를 사이트에 연결
+## 스캐너 페이지
 
-현재 Mac에서 확인한 TOT2D HID KBW 장치는 키보드 입력 방식입니다. `/scanner`에서 스캐너 전용 키로 연결하고 입력창을 활성화한 뒤, 인증된 직원 화면에서 발급한 **60초 회전 직원 QR**을 읽으세요. 스캐너 종료 문자는 Enter, 키보드 입력은 영문으로 설정합니다. 임의 테스트 QR이나 근무지 모바일 URL은 직원 출퇴근 QR로 처리하지 않습니다.
+스캐너를 연결한 PC에서 여는 **출퇴근 접수용 페이지**입니다. USB 포트 연결, 통신 속도 설정, 장치 수신 상태, 출퇴근 처리 결과와 최근 10건을 한 화면에서 확인할 수 있습니다.
+
+![스캐너 페이지: USB-COM 연결 설정, 장치 수신 상태와 최근 출퇴근 기록](docs/images/scanner-page.png)
+
+*예제 브라우저 테스트에서 모의 USB-COM 장치로 두 건을 처리한 뒤 포트 연결을 해제한 화면입니다. 실제 장비 연결을 촬영한 화면은 아닙니다.*
+
+### 로컬에서 열기
+
+[빠른 실행](#빠른-실행)에 따라 API와 웹 서버를 실행한 뒤, 스캐너를 꽂은 PC에서 **[http://localhost:5177/scanner](http://localhost:5177/scanner)** 를 엽니다. 관리자 예제의 **USB QR 스캐너** 링크로도 이동할 수 있습니다.
+
+1. 서버에 설정한 `ATTENDANCE_SCANNER_TOKEN`을 **스캐너 접속 키**에 입력하고 **스캐너 연결**을 누릅니다.
+2. USB-COM 장치는 통신 속도를 장치 설정과 맞춘 뒤 **USB-COM 포트 연결**을 눌러 포트를 선택합니다. Web Serial을 지원하는 데스크톱 Chrome/Edge의 HTTPS 또는 localhost 환경에서 사용합니다.
+3. USB-KBW(키보드 입력) 장치는 **입력창 활성화**를 누른 뒤 사용합니다. 키보드는 영문 입력, 스캐너 종료 문자는 Enter로 설정합니다.
+4. 인증된 직원 화면에서 발급한 **60초 회전 직원 QR**을 스캔하고 처리 결과를 확인합니다. 임의 테스트 QR이나 근무지 모바일 URL은 직원 출퇴근 QR로 처리하지 않습니다.
+
+스캐너 전용 키를 통한 서버 인증과 USB-COM 포트 연결은 별도 단계입니다. 페이지를 새로고침하면 다시 연결해야 합니다.
+
+### 실제 서비스에 연결
+
+공통 화면은 [`AttendanceScanner`](js/attendance-react-scanner/src/index.tsx)로 제공하고, [`examples/web/scanner.tsx`](examples/web/scanner.tsx)는 이를 사용하는 예제입니다. MaruLog 등 실제 서비스에서는 이 컴포넌트를 서비스의 페이지 경로에 등록하고 스캐너 API에 연결합니다. 연동 후에는 해당 서비스의 스캐너 페이지를 사용하므로 이 저장소의 예제 웹 서버를 별도로 실행할 필요가 없습니다.
+
+```tsx
+import { AttendanceScanner } from '@attendance/attendance-react-scanner';
+import '@attendance/attendance-react-scanner/style.css';
+
+export function ScannerPage() {
+  return <AttendanceScanner baseUrl="/api/scanner" title="사무실 QR 스캐너" />;
+}
+```
+
+페이지 경로(예: `/scanner`)는 호스트의 웹 라우터에 등록하고, `baseUrl`은 서버 스캐너 API의 경로와 맞춥니다.
 
 설치 방법은 [범용 설치 매뉴얼](docs/install.md)을 따릅니다.
 
